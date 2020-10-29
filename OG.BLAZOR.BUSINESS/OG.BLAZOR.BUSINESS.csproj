@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\OG.BLAZOR.DATA\OG.BLAZOR.DATA.csproj" />
+    <ProjectReference Include="..\OG.BLAZOR.ENTITIES\OG.BLAZOR.ENTITIES.csproj" />
+  </ItemGroup>
+
+</Project>

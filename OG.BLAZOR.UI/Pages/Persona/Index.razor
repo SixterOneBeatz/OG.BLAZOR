@@ -1,0 +1,63 @@
+﻿@page "/"
+@using OG.BLAZOR.UI.Data
+@using OG.BLAZOR.ENTITIES
+@inject PersonaService PersonaService
+
+<div class="container">
+    <div class="row">
+        <div class="col-10"><h1>Personas</h1></div>
+        <div class="col-2"><a href="/Agregar" class="btn btn-success">Agregar &nbsp;<i class="oi oi-plus"></i></a></div>
+    </div>
+    <div class="row">
+        @if (personas == null)
+        {
+            <p><em>Loading...</em></p>
+        }
+        else
+        {
+            <div class="col-12">
+                <table class="table table-striped">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th>Nombre</th>
+                            <th>Apellido Paterno</th>
+                            <th>Apellido Materno</th>
+                            <th>Edad</th>
+                            <th>Estatura</th>
+                            <th>Peso</th>
+                            <th>Fecha de nacimiento</th>
+                            <th>Activo</th>
+                            <th></th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var p in personas)
+                        {
+                            <tr>
+                                <td>@p.Nombre</td>
+                                <td>@p.AP</td>
+                                <td>@p.AM</td>
+                                <td>@p.Edad</td>
+                                <td>@p.Estatura</td>
+                                <td>@p.Peso</td>
+                                <td>@p.FechaN.Value.ToString("dd/MM/yyyy")</td>
+                                <td><input type="checkbox" value="@p.Activo" checked="@p.Activo" disabled /></td>
+                                <td><a href="/Detalle/Editar/@p.Id" class="btn btn-primary btn-sm">Editar</a></td>
+                                <td><a href="/Detalle/Eliminar/@p.Id" class="btn btn-danger btn-sm">Eliminar</a></td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+    </div>
+</div>
+@code {
+    private List<EPersona> personas;
+    protected override async Task OnInitializedAsync()
+    {
+        personas = await PersonaService.GetPersonasAsync();        
+    }
+}
+

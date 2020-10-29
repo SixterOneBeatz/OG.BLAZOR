@@ -1,0 +1,104 @@
+﻿@page "/Detalle/"
+@page "/Detalle/{tipo}/{id:int}"
+
+@using OG.BLAZOR.ENTITIES
+
+@inject OG.BLAZOR.UI.Data.PersonaService PersonaService
+@inject NavigationManager navigationManager
+
+<h3>@tipo</h3>
+
+<EditForm Model="persona">
+    <div class="container">
+        <div class="row">
+            <input type="hidden" @bind="@persona.Id" />
+            <div class="form-group col-3">
+                <label>Nombre:</label>
+                <input class="form-control" type="text" @bind="@persona.Nombre" disabled="@disabled" />
+            </div>
+            <div class="form-group col-3">
+                <label>Apellido paterno:</label>
+                <input class="form-control" type="text" @bind="@persona.AP" disabled="@disabled"/>
+            </div>
+            <div class="form-group col-3">
+                <label>Apellido materno:</label>
+                <input class="form-control" type="text" @bind="@persona.AM" disabled="@disabled"/>
+            </div>
+            <div class="form-group col-3">
+                <label>Edad:</label>
+                <input class="form-control" type="number" @bind="@persona.Edad" disabled="@disabled"/>
+            </div>
+            <div class="form-group col-3">
+                <label>Estatura:</label>
+                <input class="form-control" type="number" step="0.01" @bind="@persona.Estatura" disabled="@disabled"/>
+            </div>
+            <div class="form-group col-3">
+                <label>Peso:</label>
+                <input class="form-control" type="text" step="0.01" @bind="@persona.Peso" disabled="@disabled"/>
+            </div>
+            <div class="form-group col-3">
+                <label>Fecha de nacimiento:</label>
+                <input class="form-control" type="date" @bind="@persona.FechaN" disabled="@disabled"/>
+            </div>
+            <div class="form-group col-3">
+                <label>Activo:</label>
+                <input class="form-control" type="checkbox" @bind="@persona.Activo" disabled="@disabled"/>
+            </div>
+            @if (tipo == "Eliminar")
+            {
+                <div class="form-group col-3">
+                    <input class="btn btn-danger btn-block" type="submit" @onclick="_Eliminar" value="Eliminar"/>
+                </div>
+            }
+            else if (tipo == "Editar")
+            {
+                <div class="form-group col-3">
+                    <input class="btn btn-primary btn-block" type="submit" @onclick="_Modificar" value="Modificar" />
+                </div>
+            }
+            <div class="form-group col-3">
+                <input class="btn btn-light btn-block" type="submit" @onclick="_Cancelar" value="Cancelar" />
+            </div>
+        </div>
+    </div>
+</EditForm>
+@code {
+    [Parameter]
+    public int id { get; set; }
+    [Parameter]
+    public string tipo { get; set; }
+
+    public bool disabled { get; set; }
+    protected void DeshabilitarInputs()
+    {
+        if (tipo=="Eliminar")
+        {
+            disabled = true;
+        }
+        else if(tipo=="Editar")
+        {
+            disabled = false;
+        }
+    }
+
+    private EPersona persona = new EPersona();
+    protected void _Cancelar()
+    {
+        navigationManager.NavigateTo("/");
+    }
+    protected async Task _Eliminar()
+    {
+        await PersonaService.EliminarAsync(persona);
+        navigationManager.NavigateTo("/");
+    }
+    protected async Task _Modificar()
+    {
+        await PersonaService.ModificarrAsync(persona);
+        navigationManager.NavigateTo("/");
+    }
+    protected override async Task OnInitializedAsync()
+    {
+        persona = await PersonaService.GetPersonaAsync(id);
+        DeshabilitarInputs();
+    }
+}
